@@ -32,17 +32,17 @@
       animation: fadeInUp 1s ease;
     }
     .cover h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       margin-bottom: 10px;
     }
     .cover p {
-      font-size: 1.2rem;
+      font-size: 1rem;
       max-width: 400px;
       margin-bottom: 20px;
     }
     .cover button {
       padding: 10px 20px;
-      font-size: 1.2rem;
+      font-size: 1rem;
       border: none;
       border-radius: 10px;
       background-color: #007bff;
@@ -55,82 +55,73 @@
       background-color: #0056b3;
     }
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .hidden {
-      display: none;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    .stats {
-      margin-bottom: 10px;
-    }
+    .hidden { display: none; }
+    .stats { margin-bottom: 10px; font-size: 1rem; }
     .game-board {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
       gap: 10px;
+      width: 100%;
+      max-width: 480px;
     }
     .card {
-      width: 80px;
-      height: 80px;
       background-color: #fff;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 1.5rem;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      transform: rotateY(0);
+      aspect-ratio: 1 / 1;
       transition: transform 0.3s ease, background 0.3s;
     }
-    .card.revealed {
-      background-color: #d1f0ff;
-    }
-    .card.matched {
-      background-color: #b2f2bb;
-      cursor: default;
-    }
-    .controls {
-      margin-top: 20px;
+    .card.revealed { background-color: #d1f0ff; }
+    .card.matched { background-color: #b2f2bb; cursor: default; }
+    .controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .controls button {
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
     }
     .message {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       margin: 15px 0;
       animation: pulse 1s infinite;
+      text-align: center;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
     .ranking {
       margin-top: 20px;
-      max-width: 300px;
-      text-align: left;
+      max-width: 90%;
+      text-align: center;
     }
     .ranking ul {
       list-style: none;
       padding-left: 0;
     }
     .ranking li {
-      background: #ffffffbb;
+      background: #ffffffcc;
       margin: 4px 0;
       padding: 6px 10px;
       border-radius: 8px;
+      font-size: 0.9rem;
     }
-    @media (max-width: 600px) {
-      .game-board {
-        grid-template-columns: repeat(4, 70px);
-      }
+    @media (min-width: 768px) {
+      .cover h1 { font-size: 3rem; }
+      .card { font-size: 2rem; }
+      .message { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -138,21 +129,21 @@
   <div class="cover" id="cover">
     <h1>🧠 MemoRed</h1>
     <p>¡Elige un nivel para poner a prueba tu memoria con temáticas divertidas!</p>
-    <button style="background-color:#6fbf73;" id="btn-ia">Nivel 1: Inteligencia Artificial</button>
-    <button style="background-color:#ffd966; color: black;" id="btn-animalitos">Nivel 2: Animalitos</button>
-    <button style="background-color:#f28b82;" id="btn-instrumentos">Nivel 3: Internet</button>
+    <button id="btn-ia">Nivel 1: Inteligencia Artificial</button>
+    <button id="btn-animalitos">Nivel 2: Animalitos</button>
+    <button id="btn-instrumentos">Nivel 3: Internet</button>
   </div>
 
   <div id="gameContainer" class="hidden">
-    <h1 id="gameTitle" style="display: flex; align-items: center; gap: 10px;">1. MemoRed 🧠 <img id="levelFigure" src="" alt="Nivel" style="width: 50px; height: 50px;"></h1>
+    <h1 id="gameTitle" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.8rem; flex-wrap: wrap;">MemoRed <img id="levelFigure" src="" alt="Nivel" style="width: 40px; height: 40px;"></h1>
     <div class="stats">
-      <span>⏱️ Tiempo: <span id="timer">0</span> seg</span>
+      ⏱️ Tiempo: <span id="timer">0</span> seg
     </div>
     <div class="game-board" id="gameBoard"></div>
     <div class="message" id="winMessage"></div>
     <div class="controls">
-      <button onclick="startGame(currentLevel)">🔄 Nuevo juego</button>
-      <button onclick="returnToCover()">🏠 Regresar al inicio</button>
+      <button id="newGameBtn">🔄 Nuevo juego</button>
+      <button id="returnBtn">🏠 Regresar al inicio</button>
     </div>
     <div class="ranking">
       <h3>🏆 Ranking de Ganadores</h3>
@@ -160,34 +151,12 @@
     </div>
   </div>
 
-  <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_92e9b2e13a.mp3"></audio>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Botones para iniciar el juego
-      document.getElementById('btn-ia').onclick = () => startGameFromCover('ia');
-      document.getElementById('btn-animalitos').onclick = () => startGameFromCover('animalitos');
-      document.getElementById('btn-instrumentos').onclick = () => startGameFromCover('instrumentos');
-
-      // Botones de control
-      document.querySelector('.controls button:nth-child(1)').onclick = () => startGame(currentLevel);
-      document.querySelector('.controls button:nth-child(2)').onclick = returnToCover;
-    });
-
+  document.addEventListener('DOMContentLoaded', () => {
     const iconThemes = {
-      ia: [
-        'fa-robot', 'fa-brain', 'fa-microchip', 'fa-bolt', 'fa-code',
-        'fa-vr-cardboard', 'fa-headset', 'fa-laptop-code', 'fa-network-wired', 'fa-cloud'
-      ],
-      animalitos: [
-        'fa-dog', 'fa-cat', 'fa-fish', 'fa-dove', 'fa-hippo',
-        'fa-frog', 'fa-horse', 'fa-otter', 'fa-spider', 'fa-crow', 'fa-dragon', 'fa-feather'
-      ],
-      instrumentos: [
-        'fa-globe', 'fa-wifi', 'fa-envelope', 'fa-download', 'fa-upload',
-        'fa-signal', 'fa-search', 'fa-home', 'fa-user', 'fa-lock',
-        'fa-unlock', 'fa-cloud', 'fa-database', 'fa-server', 'fa-network-wired'
-      ]
+      ia: ['fa-robot', 'fa-brain', 'fa-microchip', 'fa-bolt', 'fa-code', 'fa-vr-cardboard', 'fa-headset', 'fa-laptop-code', 'fa-network-wired', 'fa-cloud'],
+      animalitos: ['fa-dog', 'fa-cat', 'fa-fish', 'fa-dove', 'fa-hippo', 'fa-frog', 'fa-horse', 'fa-otter', 'fa-spider', 'fa-crow'],
+      instrumentos: ['fa-globe', 'fa-wifi', 'fa-envelope', 'fa-download', 'fa-upload', 'fa-signal', 'fa-search', 'fa-home', 'fa-user', 'fa-lock']
     };
 
     let currentLevel = 'ia';
@@ -201,9 +170,18 @@
     const winMessage = document.getElementById('winMessage');
     const gameBoard = document.getElementById('gameBoard');
     const rankingList = document.getElementById('rankingList');
-    const winSound = document.getElementById('winSound');
+    const winSound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_92e9b2e13a.mp3');
+
     const cover = document.getElementById('cover');
     const gameContainer = document.getElementById('gameContainer');
+    const newGameBtn = document.getElementById('newGameBtn');
+    const returnBtn = document.getElementById('returnBtn');
+
+    document.getElementById('btn-ia').onclick = () => startGameFromCover('ia');
+    document.getElementById('btn-animalitos').onclick = () => startGameFromCover('animalitos');
+    document.getElementById('btn-instrumentos').onclick = () => startGameFromCover('instrumentos');
+    newGameBtn.onclick = () => startGame(currentLevel);
+    returnBtn.onclick = returnToCover;
 
     function startGameFromCover(level) {
       currentLevel = level;
@@ -222,41 +200,19 @@
     function startGame(level) {
       const figure = document.getElementById('levelFigure');
       if (figure) {
-        if (level === 'ia') {
-          figure.src = 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png';
-        } else if (level === 'animalitos') {
-          figure.src = 'https://cdn-icons-png.flaticon.com/512/616/616408.png';
-        } else {
-          figure.src = 'https://cdn-icons-png.flaticon.com/512/484/484167.png';
-        }
+        if (level === 'ia') figure.src = 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png';
+        else if (level === 'animalitos') figure.src = 'https://cdn-icons-png.flaticon.com/512/616/616408.png';
+        else figure.src = 'https://cdn-icons-png.flaticon.com/512/484/484167.png';
       }
 
-      if (level === 'ia') {
-        document.getElementById('gameTitle').innerText = '1. MemoRed 🧠';
-        gameBoard.style.gridTemplateColumns = 'repeat(5, 80px)';
-      } else if (level === 'animalitos') {
-        document.getElementById('gameTitle').innerText = '2. MemoRed 🐾';
-        gameBoard.style.gridTemplateColumns = 'repeat(6, 80px)';
-      } else {
-        document.getElementById('gameTitle').innerText = '3. MemoRed 🌐';
-        gameBoard.style.gridTemplateColumns = 'repeat(6, 80px)';
-      }
+      document.getElementById('gameTitle').innerText =
+        level === 'ia' ? '1. MemoRed 🧠' :
+        level === 'animalitos' ? '2. MemoRed 🐾' : '3. MemoRed 🌐';
 
-      let bgColor = '', bgIcon = '';
-      if (level === 'ia') {
-        bgColor = 'linear-gradient(to right, #e0f7e9, #b2fab4)';
-        bgIcon = 'url("https://cdn-icons-png.flaticon.com/512/4712/4712109.png")';
-      } else if (level === 'animalitos') {
-        bgColor = 'linear-gradient(to right, #fff9c4, #ffe57f)';
-        bgIcon = 'url("https://cdn-icons-png.flaticon.com/512/616/616408.png")';
-      } else {
-        bgColor = 'linear-gradient(to right, #fce4ec, #f8bbd0)';
-        bgIcon = 'url("https://cdn-icons-png.flaticon.com/512/159/159604.png")';
-      }
-      document.body.style.backgroundImage = `${bgColor}, ${bgIcon}`;
-      document.body.style.backgroundRepeat = 'no-repeat';
-      document.body.style.backgroundPosition = 'center center';
-      document.body.style.backgroundSize = 'contain';
+      document.body.style.backgroundImage =
+        level === 'ia' ? 'linear-gradient(to right, #e0f7e9, #b2fab4)' :
+        level === 'animalitos' ? 'linear-gradient(to right, #fff9c4, #ffe57f)' :
+        'linear-gradient(to right, #fce4ec, #f8bbd0)';
 
       clearInterval(interval);
       timer = 0;
@@ -265,10 +221,9 @@
       gameBoard.innerHTML = '';
       cards = [];
       lockBoard = false;
+
       const iconSet = [...iconThemes[level], ...iconThemes[level]];
       shuffle(iconSet);
-
-      winSound.play().then(() => winSound.pause()).catch(() => {});
 
       iconSet.forEach(icon => {
         const div = document.createElement('div');
@@ -315,7 +270,7 @@
           firstCard.innerHTML = '';
           secondCard.innerHTML = '';
           resetCards();
-        }, 1000);
+        }, 900);
       }
     }
 
@@ -337,7 +292,7 @@
             saveRecord(name.trim(), timer);
             showRanking();
           }
-        }, 300);
+        }, 400);
       }
     }
 
@@ -367,11 +322,8 @@
       gameContainer.classList.add('hidden');
       cover.classList.remove('hidden');
       document.body.style.background = 'linear-gradient(to right, #e0eafc, #cfdef3)';
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundSize = '';
-      document.body.style.backgroundRepeat = '';
-      document.body.style.backgroundPosition = '';
     }
-  </script>
+  });
+</script>
 </body>
 </html>
