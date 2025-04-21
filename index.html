@@ -50,9 +50,9 @@
       transition: background-color 0.3s ease;
       margin: 10px;
     }
-    #btn-ia { background-color: #6fbf73; }
-    #btn-animalitos { background-color: #ffd966; color: #333; }
-    #btn-instrumentos { background-color: #f28b82; }
+    #btn-ia { background-color: #6fbf73 !important; color: white; }
+    #btn-animalitos { background-color: #ffd966 !important; color: #333; }
+    #btn-instrumentos { background-color: #f28b82 !important; color: white; }
 
     .cover button:hover {
       opacity: 0.9;
@@ -239,6 +239,15 @@
       const fullSet = iconThemes[level];
       const pairCount = level === 'ia' ? 10 : level === 'animalitos' ? 12 : 15;
       const iconSet = [...fullSet.slice(0, pairCount), ...fullSet.slice(0, pairCount)];
+
+      // Ajustar columnas del tablero según el nivel
+      if (level === 'ia') {
+        gameBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
+      } else if (level === 'animalitos') {
+        gameBoard.style.gridTemplateColumns = 'repeat(6, 1fr)';
+      } else {
+        gameBoard.style.gridTemplateColumns = 'repeat(6, 1fr)';
+      }
       shuffle(iconSet);
 
       iconSet.forEach(icon => {
