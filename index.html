@@ -45,21 +45,28 @@
       font-size: 1rem;
       border: none;
       border-radius: 10px;
-      background-color: #007bff;
       color: white;
       cursor: pointer;
       transition: background-color 0.3s ease;
       margin: 10px;
     }
+    #btn-ia { background-color: #6fbf73; }
+    #btn-animalitos { background-color: #ffd966; color: #333; }
+    #btn-instrumentos { background-color: #f28b82; }
+
     .cover button:hover {
-      background-color: #0056b3;
+      opacity: 0.9;
     }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .hidden { display: none; }
-    .stats { margin-bottom: 10px; font-size: 1rem; }
+    .stats {
+      margin: 10px 0;
+      font-size: 1rem;
+      text-align: center;
+    }
     .game-board {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
@@ -81,7 +88,13 @@
     }
     .card.revealed { background-color: #d1f0ff; }
     .card.matched { background-color: #b2f2bb; cursor: default; }
-    .controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     .controls button {
       padding: 10px;
       border-radius: 8px;
@@ -137,7 +150,7 @@
   <div id="gameContainer" class="hidden">
     <h1 id="gameTitle" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.8rem; flex-wrap: wrap;">MemoRed <img id="levelFigure" src="" alt="Nivel" style="width: 40px; height: 40px;"></h1>
     <div class="stats">
-      ⏱️ Tiempo: <span id="timer">0</span> seg
+      <span id="timerWrapper">⏱️ Tiempo: <span id="timer">0</span> seg</span>
     </div>
     <div class="game-board" id="gameBoard"></div>
     <div class="message" id="winMessage"></div>
@@ -155,8 +168,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const iconThemes = {
       ia: ['fa-robot', 'fa-brain', 'fa-microchip', 'fa-bolt', 'fa-code', 'fa-vr-cardboard', 'fa-headset', 'fa-laptop-code', 'fa-network-wired', 'fa-cloud'],
-      animalitos: ['fa-dog', 'fa-cat', 'fa-fish', 'fa-dove', 'fa-hippo', 'fa-frog', 'fa-horse', 'fa-otter', 'fa-spider', 'fa-crow'],
-      instrumentos: ['fa-globe', 'fa-wifi', 'fa-envelope', 'fa-download', 'fa-upload', 'fa-signal', 'fa-search', 'fa-home', 'fa-user', 'fa-lock']
+      animalitos: ['fa-dog', 'fa-cat', 'fa-fish', 'fa-dove', 'fa-hippo', 'fa-frog', 'fa-horse', 'fa-otter', 'fa-spider', 'fa-crow', 'fa-dragon', 'fa-feather'],
+      instrumentos: ['fa-globe', 'fa-wifi', 'fa-envelope', 'fa-download', 'fa-upload', 'fa-signal', 'fa-search', 'fa-home', 'fa-user', 'fa-lock', 'fa-unlock', 'fa-cloud', 'fa-database', 'fa-server', 'fa-network-wired']
     };
 
     let currentLevel = 'ia';
@@ -200,9 +213,10 @@
     function startGame(level) {
       const figure = document.getElementById('levelFigure');
       if (figure) {
-        if (level === 'ia') figure.src = 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png';
-        else if (level === 'animalitos') figure.src = 'https://cdn-icons-png.flaticon.com/512/616/616408.png';
-        else figure.src = 'https://cdn-icons-png.flaticon.com/512/484/484167.png';
+        figure.src =
+          level === 'ia' ? 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png' :
+          level === 'animalitos' ? 'https://cdn-icons-png.flaticon.com/512/616/616408.png' :
+          'https://cdn-icons-png.flaticon.com/512/484/484167.png';
       }
 
       document.getElementById('gameTitle').innerText =
@@ -222,7 +236,9 @@
       cards = [];
       lockBoard = false;
 
-      const iconSet = [...iconThemes[level], ...iconThemes[level]];
+      const fullSet = iconThemes[level];
+      const pairCount = level === 'ia' ? 10 : level === 'animalitos' ? 12 : 15;
+      const iconSet = [...fullSet.slice(0, pairCount), ...fullSet.slice(0, pairCount)];
       shuffle(iconSet);
 
       iconSet.forEach(icon => {
@@ -281,7 +297,7 @@
 
     function checkVictory() {
       const matched = document.querySelectorAll('.matched');
-      const totalPairs = iconThemes[currentLevel].length;
+      const totalPairs = currentLevel === 'ia' ? 10 : currentLevel === 'animalitos' ? 12 : 15;
       if (matched.length === totalPairs * 2) {
         clearInterval(interval);
         winSound.play();
