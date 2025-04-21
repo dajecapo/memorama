@@ -141,6 +141,7 @@
   </style>
 </head>
 <body>
+  <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_92e9b2e13a.mp3"></audio>
   <div class="cover" id="cover">
     <h1>🧠 MemoRed</h1>
     <p>¡Elige un nivel para poner a prueba tu memoria con temáticas divertidas!</p>
@@ -350,6 +351,12 @@
       document.body.style.background = 'linear-gradient(to right, #e0eafc, #cfdef3)';
     }
   });
+  // Refuerzo para asegurar compatibilidad en escritorio y móvil
+  document.getElementById('btn-ia').addEventListener('click', () => startGameFromCover('ia'));
+  document.getElementById('btn-animalitos').addEventListener('click', () => startGameFromCover('animalitos'));
+  document.getElementById('btn-instrumentos').addEventListener('click', () => startGameFromCover('instrumentos'));
+  document.getElementById('newGameBtn').addEventListener('click', () => startGame(currentLevel));
+  document.getElementById('returnBtn').addEventListener('click', returnToCover);
 </script>
 </body>
 </html>
